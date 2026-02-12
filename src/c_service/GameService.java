@@ -1,5 +1,6 @@
 package c_service;
 
+import b_controller.GameController;
 import d_model.EventStage;
 import d_model.Spaceship;
 import exceptions.CriticalStatusException;
@@ -102,6 +103,34 @@ public class GameService {
             callTheFileLogger("Not enough spare parts");
             throw new InvalidTradeException("You don't have enough spare parts");
         }
+        spaceship.setSpareParts(spaceship.getSpareParts() - amount);
+    }
+    public void validateShieldBuy()throws InvalidTradeException{
+        if(spaceship.getShieldLevel() == 1){
+            callTheFileLogger("Not enough shield level");
+            throw new InvalidTradeException("Already have shield level one");
+        }
+    }
+//-------------------Event resources 3-------------------------------------------------------------------------------------------//
+
+    public void repairKitUse(){
+        spaceship.setIntegrity(spaceship.getIntegrity() + 20);
+        spaceship.setRepairKitUsed(true);
+    }
+
+    public void repairTry() throws CriticalStatusException {
+        int failures = 0;
+        for (int i = 0; i < 2; i++) {
+            if (getRandomNumber(60, 100) > 60){
+                failures++;
+                if (failures == 2){
+                    throw new CriticalStatusException("The crew failed to repair the engine");
+                }
+                spaceship.setIntegrity(spaceship.getIntegrity() - 15);
+            } else {
+                break;
+            }
+        }
     }
     public Spaceship getShip() {
         return spaceship;
@@ -146,6 +175,7 @@ public class GameService {
         spaceship.setIntegrity(integrity);
     }
 
+
     public void setShipDeadStatus () {
         spaceship.setIsDead(true);
     }
@@ -158,6 +188,7 @@ public class GameService {
     public void eventEnded (){
         fileLogger.WriteLogFile(spaceship.getShipsName(), spaceship.getCaptainsName(), spaceship.getEventStageEnum(), spaceship.getIsDead());
     }
+
 
     public void spaceshipDied() {
         System.exit(0);
