@@ -9,6 +9,7 @@ public class Spaceship {
     private int shieldLevel;
     private boolean repairKitUsed;
     private Enum<EventStage> eventStageEnum;
+    private boolean isDead;
 
     public Spaceship(String shipsName, String captainsName) {
         this.shipsName = shipsName;
@@ -19,6 +20,7 @@ public class Spaceship {
         this.shieldLevel = 0;
         this.repairKitUsed = false;
         this.eventStageEnum = EventStage.EVENT_STAGE_1;
+        this.isDead = false;
     }
 
     public String getShipsName() {
@@ -45,6 +47,9 @@ public class Spaceship {
     public Enum<EventStage> getEventStageEnum() {
         return this.eventStageEnum;
     }
+    public boolean getIsDead () {
+        return this.isDead;
+    }
 
     public void setFuel(int fuel) {
         this.fuel = fuel;
@@ -63,5 +68,8 @@ public class Spaceship {
     }
     public void setEventStage(EventStage eventStage){
         this.eventStageEnum = eventStage;
+    }
+    public void setIsDead (boolean isDead) {
+        this.isDead = isDead;
     }
 }

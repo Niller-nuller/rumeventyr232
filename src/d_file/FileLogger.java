@@ -33,7 +33,7 @@ public class FileLogger {
     }
 
 
-    public void WriteLogFile(String shipName, String captainName, Enum<EventStage> eventNumber) {
+    public void WriteLogFile(String shipName, String captainName, Enum<EventStage> eventNumber, boolean isDead) {
         Path file = Paths.get("Logs/" + shipName + ".txt");
 
         try (FileWriter writer = new FileWriter(file.toFile(),true)) {
@@ -44,6 +44,7 @@ public class FileLogger {
             String captainNameText = "Captain:  " + captainName + "\n";
             String space = "\n";
             String eventNumberText = "Event number: " + eventNumber + "\n";
+            String aliveStatus = "Are you dead?: " + isDead + "\n";
             writer.write(shipNameText);
             writer.write(captainNameText);
             writer.write(space);
@@ -52,6 +53,11 @@ public class FileLogger {
             writer.write(space);
 
             addStringLogToFile(writer);
+            writer.write(space);
+            writer.write(aliveStatus);
+            if (isDead) {
+                writer.write("You are done, dead, no longer existing... Please do not try again");
+            }
 
             String str2 = "==================================================\n";
             writer.write(str2);
