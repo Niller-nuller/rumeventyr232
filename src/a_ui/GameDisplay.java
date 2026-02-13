@@ -28,8 +28,7 @@ public class GameDisplay {
                 gameController.handleShipCreation(shipsName, captainsName);
                 gameController.createLogFile(shipsName);
                 break;
-            } catch (ValidationException e) {
-
+            } catch (ValidationException | IllegalArgumentException e) {
                 System.out.println(e.getMessage());
             }
         }
@@ -102,7 +101,7 @@ public class GameDisplay {
             System.out.println("---Hairball incorporated---");
             System.out.println("Firstly you can buy fuel for spare parts");
             System.out.println("(Special offer only for you my friend) secondly you can buy shield lvl one for four spare parts");
-            System.out.println("Continue on your journey");
+            System.out.println("Thirdly you can continue on your journey");
             System.out.println("---------------------------");
             System.out.print("Write 1, 2 or 3 for your choice of action: ");
             int eventChoice = 0;
@@ -149,11 +148,11 @@ public class GameDisplay {
     }
 
     public void printEvent3() {
-        System.out.println("CAPTAIN the quantrum extroliator, fusion pusher 3000xd engine TM has broken down");
+        System.out.println("CAPTAIN the quantrum extroliator, fusion pusher 3000xd™ engine has broken down");
         System.out.println("Captain do you wish to use our repair kit to give us more legroom to try and fix the engine?");;
         int eventChoice = 0;
         while (true) {
-            System.out.println("Captain, please send down an answer. A 1 for yes and a 2 for no.");
+            System.out.println("Captain, please send down an answer. 1 for yes and a 2 for no.");
             System.out.println("----------------------------------------------------------------");
             System.out.print("Captain, please choose an action: ");
             try {
@@ -176,10 +175,22 @@ public class GameDisplay {
         } catch (CriticalStatusException e) {
             System.out.println(e.getMessage());
         }
-
+        gameEnd();
+    }
+    public void gameEnd(){
+        System.out.println();
+        System.out.println("Congrats on making it to the end");
+        System.out.println("You have finished your journey");
+        System.out.println("and reached your destination");
+        gameController.atEventEnd();
+        gameController.gameEnded();
     }
     public void printRepairFailure() {
         System.out.println("Repair failed. -15 Ship integrity");
+    }
+
+    public void printRepairMSG(){
+        System.out.println("Trying to repair");
     }
 
     public void spaceshipHasDied() {
@@ -187,11 +198,7 @@ public class GameDisplay {
         System.out.println("You reached: " + gameController.currentEventStage());
         System.out.println("Your spaceships journey has been saved to: " + gameController.getShipName() + ".txt");
     }
-
-
     public void printException(Exception e) {
         System.out.println(e.getMessage());
     }
-
-
 }

@@ -1,0 +1,26 @@
+Velkommen til rumeventyret.
+
+Programmet starter med at spørgere efter Navn på kaptajnen og efter skibets navn.
+
+Programmet efter går videre til event 1 og spørger efter en handling baseret på en Integer.
+
+Efter udskriver den baseret på hvad for et valg og hvad der skete under event.
+
+Så udskriver den skibets stats/status.
+
+Vis spilleren ikke døde går programmet videre til event 2.
+
+I event 2 får spilleren 3 valg og spilleren kan ikke købe for 0 eller mere end hvad de har.
+
+Efter spilleren vælger 3 går programmet til event 3.
+
+I event 3 får spilleren valget mellem enden at bruge deres sparekit til reparere deres engine eller at lade vær.
+
+Vis ja prøver programmet 2 at reparere engine med en 40% chance succes.
+
+Efter får spilleren en besked om reparationen er en succes eller ej.
+
+Spillet slutter med et en tillykke besked og printer Log filen i konsollen.
+
+//
+Vi har sat storm damage som 100, men ellers har vi holdt os til de numre som ligger i opgave dokumentet.

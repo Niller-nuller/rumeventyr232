@@ -64,9 +64,9 @@ public class GameController {
     }
 
     public void FlyThroughTheStorm() {
-        int damagebase = gameService.getStormDamage();
-        double multiplyier = gameService.getRandomNumber(5, 50) / 100.00;
-        int damage = (int) (damagebase * (1 - multiplyier));
+        int damageBase = gameService.getStormDamage();
+        double multiplier = gameService.getRandomNumber(5, 100) / 100.00;
+        int damage = (int) (damageBase * (1 - multiplier));
         int shield = getShipShieldLevel();
         int integrity = getShipIntegrity();
 
@@ -84,15 +84,24 @@ public class GameController {
     public void TakeEvasiveAction() {
         if (getShipFuel() >= 20) {
             gameService.setShipFuel(getShipFuel() - 20);
-            int damage = 0;
+            int damage;
             if (gameService.getRandomNumber(1, 100) > 67) {
                 if (gameService.getShipShieldLevel() > 0) {
-                    damage = (gameService.getStormDamage() * (1 - (gameService.getRandomNumber(75, 100)/100)));
+                    int damageBase = gameService.getStormDamage();
+                    double multiplier = gameService.getRandomNumber(75, 100) / 100.00;
+                    damage = (int) (damageBase * (1 - multiplier));
                     gameService.setShipIntegrity(getShipIntegrity() - damage);
                 } else {
-                    damage = (gameService.getStormDamage() * (1 - gameService.getRandomNumber(25, 50)/100));
+                    int damageBase = gameService.getStormDamage();
+                    double multiplier = gameService.getRandomNumber(50, 75) / 100.00;
+                    damage = (int) (damageBase * (1 - multiplier));
                     gameService.setShipIntegrity(getShipIntegrity() - damage);
                 }
+            } else {
+                int damageBase = gameService.getStormDamage();
+                double multiplier = gameService.getRandomNumber(25, 50) / 100.00;
+                damage = (int) (damageBase * (1 - multiplier));
+                gameService.setShipIntegrity(getShipIntegrity() - damage);
             }
             gameDisplay.printOutComeOfEvasiveAction(damage);
         }
@@ -147,12 +156,30 @@ public class GameController {
         gameService.repairKitUse();
     }
 
-    public void repairTry(){
-       gameService.repairTry();
+    public void repairTry() throws CriticalStatusException {
+        int failures = 0;
+        for (int i = 0; i < 2; i++) {
+            repairMSG();
+            if (gameService.getRandomNumber(60, 100) > 60){
+                failures++;
+                repairFailure();
+                if (failures == 2){
+                    gameService.callTheFileLogger("The crew failed to repair the engine");
+                    throw new CriticalStatusException("The crew failed to repair the engine");
+                }
+                gameService.setShipIntegrity(gameService.getShipIntegrity() - 15);
+            } else {
+                break;
+            }
+        }
     }
 
     public void repairFailure(){
         gameDisplay.printRepairFailure();
+    }
+
+    public void repairMSG(){
+        gameDisplay.printRepairMSG();
     }
 
     public Enum<EventStage> currentEventStage() {
@@ -169,14 +196,23 @@ public class GameController {
     public void atEventEnd() {
         try {
             gameService.checkCriticalStatus();
-            if (gameService.getShipBoolean()) {
-                gameService.eventEnded();
-                gameDisplay.spaceshipHasDied();
-                gameService.spaceshipDied();
-            }
-        } catch (CriticalStatusException | IllegalGameState e) {
+        } catch (CriticalStatusException e){
             gameDisplay.printException(e);
+            gameService.changeEventStage();
+            gameService.eventEnded();
+        } catch (IllegalGameState e){
+            gameDisplay.printException(e);
+            gameDisplay.spaceshipHasDied();
+            gameService.eventEnded();
+            gameService.printLogFile();
+            gameService.spaceshipDied();
         }
+        gameService.eventEnded();
+        gameService.changeEventStage();
+    }
+
+    public void gameEnded () {
+        gameService.printLogFile();
     }
 }
 

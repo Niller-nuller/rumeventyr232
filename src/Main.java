@@ -1,8 +1,5 @@
-import a_ui.GameDisplay;
-import b_controller.GameController;
-import c_service.GameService;
 
-import java.util.Scanner;
+import b_controller.GameController;
 
 public class Main {
      public static void main(String[] args) {

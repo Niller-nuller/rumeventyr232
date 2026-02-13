@@ -2,6 +2,8 @@ package d_file;
 
 import d_model.EventStage;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -10,7 +12,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 public class FileLogger {
-    private ArrayList<String> stringLogArray = new ArrayList<>();
+    private final ArrayList<String> stringLogArray = new ArrayList<>();
 
     public void CreateLogFile(String shipName) {
 
@@ -44,7 +46,7 @@ public class FileLogger {
             String captainNameText = "Captain:  " + captainName + "\n";
             String space = "\n";
             String eventNumberText = "Event number: " + eventNumber + "\n";
-            String aliveStatus = "Are you dead?: " + isDead + "\n";
+            String aliveStatus = "You are still alive and well captain!" + "\n";
             writer.write(shipNameText);
             writer.write(captainNameText);
             writer.write(space);
@@ -54,12 +56,14 @@ public class FileLogger {
 
             addStringLogToFile(writer);
             writer.write(space);
-            writer.write(aliveStatus);
             if (isDead) {
-                writer.write("You are done, dead, no longer existing... Please do not try again");
+                writer.write("You are done, dead, no longer existing... Please do not try again" + "\n");
+            } else {
+                writer.write(aliveStatus);
             }
 
             String str2 = "==================================================\n";
+            writer.write(space);
             writer.write(str2);
 
         } catch (IOException e) {
@@ -78,4 +82,36 @@ public class FileLogger {
         }
     }
 
+    public void printLogToConsole (String shipName) {
+
+        Path file = Paths.get("Logs/" + shipName + ".txt");
+
+        for (int i = 0; i < 5; i++){
+            System.out.println();
+        }
+
+        System.out.println("------------ LOG FILE ------------");
+
+        System.out.println();
+
+        BufferedReader readFile = null;
+        try  {
+            readFile = new BufferedReader(new FileReader(file.toFile()));
+            String line = readFile.readLine();
+
+            while (line != null){
+                System.out.println(line);
+                line = readFile.readLine();
+            }
+        } catch (IOException e) {
+            System.out.println("Kunne ikke finde filen: " + shipName);
+        } finally {
+            try {
+                if (readFile != null ) readFile.close();
+                } catch (IOException e) {
+                throw new RuntimeException(e);
+
+            }
+        }
+    }
 }
